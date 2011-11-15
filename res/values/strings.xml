@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jarvis</string>
+    <string name="help">Help</string>
+    <drawable name="ic_help">#FFFFFF</drawable>
+    <string name="search_hint">Search Hints</string>
+    <string name="app_label">app_label</string>
+    <string name="select_playlist_prompt">Select a Playlist</string>
+    <string name="delete_songs">Delete all songs</string>
+    <string name="remove_duplicates">Remove Duplicates</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="remove_duplicates_all">Remove duplicates from all Playlists</string>
+    
+    <string name="activity_calls">Calls Analyzr</string>
+    <string name="delete_songs_select_playlist">No playlist is selected! Please select a Playlist to delete songs!!</string>
+    <string name="remove_duplicates_select_playlist">No playlist is selected! Please select a Playlist to remove duplicates!!</string>
+    <string name="confirm_title">Confirm:</string>
+
+    <string name="label_homescreen">Home</string>
+    <string name="label_calls">Calls Analyzer</string>
+    <string name="label_music">Playlist Utils</string>
+    <string name="label_about">About</string>
+    <string name="label_help">Help</string>
+</resources>

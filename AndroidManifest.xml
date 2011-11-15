@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="in.co.saionline.jarvis" android:versionCode="1" android:versionName="1.0">
+
+    <uses-sdk android:minSdkVersion="8"/>
+
+    <!-- Required for "Calls Analyzer" -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!-- Required for "Playlist Utils" -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application android:icon="@drawable/icon" android:label="@string/app_name"
+                 android:name=".JarvisApplication"
+                 android:theme="@style/Theme.GDCatalog">
+
+        <activity android:name=".DashboardActivity" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".CallsActivity" android:label="@string/label_calls"/>
+
+        <activity android:name=".PlaylistActivity" android:label="@string/label_music">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
+                <data android:scheme="file"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".AboutActivity" android:label="@string/label_about"/>
+        <activity android:name=".HelpActivity" android:label="@string/label_help"/>
+        <activity android:name=".PersonCallsActivity"/>
+
+        <!-- Content Providers -->
+        <provider android:name=".JarvisProvider" android:exported="false"
+                  android:authorities="in.co.saionline.jarvis.jarvisprovider"/>
+
+        <!--  Add BroadcastReciever to receive the incoming/outgoing call states -->
+        <receiver android:name=".CallEventsReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.net.ConnectivityManager.CONNECTIVITY_ACTION"/>
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>

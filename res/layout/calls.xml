@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent" android:orientation="vertical">
+    <TextView android:text="Incoming Calls" android:layout_width="wrap_content"
+              android:layout_height="wrap_content" style="@style/subHeading"/>
+    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/incoming"/>
+    <TextView android:text="Outgoing Calls" android:layout_width="wrap_content"
+              android:layout_height="wrap_content" style="@style/subHeading"/>
+    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/outgoing"/>
+    <TextView android:text="Missed Calls" android:layout_width="wrap_content"
+              android:layout_height="wrap_content" style="@style/subHeading"/>
+    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/missed"/>
+    <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Top Long Calls"
+              style="@style/subHeading"/>
+    <ListView android:id="@+id/long_calls" android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+    <include android:id="@+id/calls_stats" android:layout_width="fill_parent" android:layout_height="wrap_content"
+             layout="@layout/calls"/>
+    <include android:id="@+id/calls_no_data" android:layout_width="fill_parent" android:layout_height="fill_parent"
+             layout="@layout/calls_no_data"/>
+</RelativeLayout>

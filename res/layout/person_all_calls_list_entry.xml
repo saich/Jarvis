@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" android:layout_height="wrap_content"
+              android:paddingLeft="5dip" android:paddingRight="5dip">
+    <TextView android:id="@+id/call_time" android:maxLines="1"
+              android:layout_width="100dip" android:layout_height="wrap_content"
+              android:paddingRight="5dip"/>
+    <TextView android:id="@+id/call_duration" android:layout_width="50dip" android:layout_height="wrap_content"
+              android:maxLines="1"/>
+</LinearLayout>
