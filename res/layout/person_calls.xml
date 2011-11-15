@@ -2,20 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent" android:orientation="vertical">
-    <ImageView android:id="@+id/person_image" android:layout_width="150dip" android:layout_height="150dip"
-            android:padding="10dip"/>
-    <TextView android:text="Incoming Calls" android:layout_width="wrap_content"
-              android:layout_height="wrap_content" style="@style/subHeading"/>
-    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:id="@+id/incoming"/>
-    <TextView android:text="Outgoing Calls" android:layout_width="wrap_content"
-              android:layout_height="wrap_content" style="@style/subHeading"/>
-    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:id="@+id/outgoing"/>
-    <TextView android:text="Missed Calls" android:layout_width="wrap_content"
-              android:layout_height="wrap_content" style="@style/subHeading"/>
-    <TextView android:text="" android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:id="@+id/missed"/>
+
+    <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <ImageView android:id="@+id/person_image" android:layout_width="150dip" android:layout_height="150dip"
+                   android:padding="10dip" android:layout_alignParentLeft="true"/>
+        <TextView android:id="@+id/incoming_label" android:text="Incoming Calls" android:layout_width="wrap_content"
+                  android:layout_height="wrap_content" style="@style/subHeading"
+                  android:layout_toRightOf="@id/person_image"/>
+        <TextView android:id="@+id/incoming" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_below="@id/incoming_label" android:layout_toRightOf="@id/person_image"/>
+        <TextView android:id="@+id/outgoing_label" android:text="Outgoing Calls" android:layout_width="wrap_content"
+                  android:layout_height="wrap_content" style="@style/subHeading" android:layout_below="@id/incoming"
+                  android:layout_toRightOf="@id/person_image"/>
+        <TextView android:id="@+id/outgoing" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_below="@id/outgoing_label" android:layout_toRightOf="@id/person_image"/>
+        <TextView android:id="@+id/missed_label" android:text="Missed Calls" android:layout_width="wrap_content"
+                  android:layout_height="wrap_content" style="@style/subHeading" android:layout_below="@id/outgoing"
+                  android:layout_toRightOf="@id/person_image"/>
+        <TextView android:id="@+id/missed" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:layout_below="@id/missed_label" android:layout_toRightOf="@id/person_image"/>
+    </RelativeLayout>
 
     <TextView android:text="All Calls:" android:layout_width="wrap_content"
               android:layout_height="wrap_content" style="@style/subHeading"/>
