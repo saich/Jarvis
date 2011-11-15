@@ -1,11 +1,14 @@
 package in.co.saionline.jarvis;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CallLog;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -13,7 +16,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 import greendroid.app.ActionBarActivity;
 import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
@@ -28,6 +34,8 @@ public class CallsActivity extends GDActivity {
 
     public static final String INTENT_CONTACT_ID = "jarvis:contact_id";
     public static final String INTENT_CONTACT_LOOKUP_KEY = "jarvis:contact_lookup_key";
+
+    private static final int PICK_CONTACT_RESULT = 1;
 
     /**
      * Contains the value the last call log updated in the private database
@@ -77,6 +85,7 @@ public class CallsActivity extends GDActivity {
         super.onDestroy();
         Log.v(TAG, "onDestroy() called");
     }
+
 
     private void updateData() {
         DataHelper.TotalStats stats = mDBHelper.getTotalStats();
@@ -200,7 +209,7 @@ public class CallsActivity extends GDActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.calls_menu, menu);
         return true;
     }
 
@@ -208,13 +217,44 @@ public class CallsActivity extends GDActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         final int id = item.getItemId();
         switch (id) {
-            case R.id.help:
-                Intent intent = new Intent();
-                intent.setClassName(this.getPackageName(), HelpActivity.class.getName());
-                startActivity(intent);
+            case R.id.choose_contact:
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+
+                startActivityForResult(intent, PICK_CONTACT_RESULT);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PICK_CONTACT_RESULT:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri contactData = data.getData();
+                    String[] projection = new String[]{
+                            ContactsContract.Contacts._ID,
+                            ContactsContract.Contacts.DISPLAY_NAME,
+                            ContactsContract.Contacts.LOOKUP_KEY,
+                            ContactsContract.Contacts.HAS_PHONE_NUMBER
+                    };
+                    Cursor c = getContentResolver().query(contactData, projection, null, null, null);
+                    if (c != null && c.moveToFirst()) {
+
+                        String display_name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        long id = c.getLong(c.getColumnIndex(ContactsContract.Contacts._ID));
+                        String lookup_key = c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+                        Intent intent = new Intent(getApplicationContext(), PersonCallsActivity.class);
+                        intent.putExtra(ActionBarActivity.GD_ACTION_BAR_TITLE, display_name);
+                        intent.putExtra(INTENT_CONTACT_ID, id);
+                        intent.putExtra(INTENT_CONTACT_LOOKUP_KEY, lookup_key);
+                        startActivity(intent);
+                    }
+                    if (c != null) c.close();
+                    break;
+                }
+        }
     }
 
     private long getLastCallLogTime() {

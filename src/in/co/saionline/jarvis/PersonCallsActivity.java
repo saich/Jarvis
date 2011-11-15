@@ -154,9 +154,14 @@ public class PersonCallsActivity extends GDActivity {
             all_calls.setAdapter(adapter);
 
             ImageView img = (ImageView) findViewById(R.id.person_image);
-            img.setImageURI(getPhotoUri(contact_id));
+            Uri photo_uri = getPhotoUri(contact_id);
+            img.setImageURI(photo_uri);
+            if(img.getDrawable() == null) {
+                // Set a default image
+                img.setImageResource(R.drawable.default_contact_image);
+            }
 
-            grouptsTst(contact_id);
+            // grouptsTst(contact_id);
         }
     }
 
