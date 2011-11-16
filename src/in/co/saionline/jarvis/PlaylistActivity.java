@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.provider.MediaStore.Audio.Playlists;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,7 +68,7 @@ public class PlaylistActivity extends GDActivity {
                 Cursor selected = (Cursor) mPlaylists.getSelectedItem();
                 if (selected != null) {
                     int id = selected.getInt(selected
-                            .getColumnIndex(MediaStore.Audio.Playlists._ID));
+                            .getColumnIndex(Playlists._ID));
                     new PlaylistRemoveDuplicatesTask().execute(id);
                 } else {
                     Toast.makeText(getApplicationContext(),
@@ -87,7 +87,7 @@ public class PlaylistActivity extends GDActivity {
 
         // Get the playlists & convert it to an adapter
         Cursor cursor = getPlaylists();
-        String[] columns = new String[]{MediaStore.Audio.Playlists.NAME};
+        String[] columns = new String[]{Playlists.NAME};
         int[] to = new int[]{android.R.id.text1};
         SimpleCursorAdapter playlistAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item, cursor, columns, to);
@@ -98,9 +98,9 @@ public class PlaylistActivity extends GDActivity {
     }
 
     private Cursor getPlaylists() {
-        String[] projection = {MediaStore.Audio.Playlists._ID, MediaStore.Audio.Playlists.NAME};
-        return managedQuery(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                projection, null, null, MediaStore.Audio.Playlists._ID + " ASC");
+        String[] projection = {Playlists._ID, Playlists.NAME};
+        return managedQuery(Playlists.EXTERNAL_CONTENT_URI,
+                projection, null, null, Playlists._ID + " ASC");
     }
 
     @Override
@@ -117,11 +117,11 @@ public class PlaylistActivity extends GDActivity {
 
                                 if (selected != null) {
                                     String name = selected.getString(selected
-                                            .getColumnIndex(MediaStore.Audio.Playlists.NAME));
+                                            .getColumnIndex(Playlists.NAME));
 
                                     if (name.equals(PLAYLIST_WHITELISTED)) {
                                         int id = selected.getInt(selected
-                                                .getColumnIndex(MediaStore.Audio.Playlists._ID));
+                                                .getColumnIndex(Playlists._ID));
                                         new PlaylistDeleteTask().execute(id);
                                     } else {
                                         showDialog(DIALOG_DELETE_PLAYLIST_OTHER);
@@ -183,7 +183,7 @@ public class PlaylistActivity extends GDActivity {
                 Cursor selected = (Cursor) mPlaylists.getSelectedItem();
                 if (selected != null) {
                     String name = selected.getString(selected
-                            .getColumnIndex(MediaStore.Audio.Playlists.NAME));
+                            .getColumnIndex(Playlists.NAME));
                     ((AlertDialog) dialog)
                             .setMessage("Are you sure you want to delete all songs in the playlist: '"
                                     + name + "' ?");
@@ -217,16 +217,16 @@ public class PlaylistActivity extends GDActivity {
             int duplicates = 0;
 
             String[] playlist_projection = new String[]{
-                    MediaStore.Audio.Playlists._ID,
-                    MediaStore.Audio.Playlists.NAME};
+                    Playlists._ID,
+                    Playlists.NAME};
 
             Cursor playlists = getContentResolver().query(
-                    MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, playlist_projection, null,
+                    Playlists.EXTERNAL_CONTENT_URI, playlist_projection, null,
                     null, null);
 
             if (playlists != null && playlists.moveToFirst()) {
-                int col_pl_id = playlists.getColumnIndex(MediaStore.Audio.Playlists._ID);
-                int col_pl_name = playlists.getColumnIndex(MediaStore.Audio.Playlists.NAME);
+                int col_pl_id = playlists.getColumnIndex(Playlists._ID);
+                int col_pl_name = playlists.getColumnIndex(Playlists.NAME);
 
                 do {
                     int id = playlists.getInt(col_pl_id);
@@ -235,15 +235,15 @@ public class PlaylistActivity extends GDActivity {
 
                     // Get the songlist in the Playlist
                     String[] projection = {
-                            MediaStore.Audio.Playlists.Members._ID,
-                            MediaStore.Audio.Playlists.Members.DATA,
-                            MediaStore.Audio.Playlists.Members.TITLE};
+                            Playlists.Members._ID,
+                            Playlists.Members.DATA,
+                            Playlists.Members.TITLE};
 
                     String selection = "1=1) GROUP BY "
-                            + MediaStore.Audio.Playlists.Members.DATA + " HAVING (count("
-                            + MediaStore.Audio.Playlists.Members.DATA + ") > 1";
+                            + Playlists.Members.DATA + " HAVING (count("
+                            + Playlists.Members.DATA + ") > 1";
 
-                    Uri playlist_uri = MediaStore.Audio.Playlists.Members.getContentUri(
+                    Uri playlist_uri = Playlists.Members.getContentUri(
                             "external", id);
 
                     Cursor songs = getContentResolver().query(playlist_uri, projection,
@@ -251,22 +251,22 @@ public class PlaylistActivity extends GDActivity {
 
                     if (songs != null && songs.moveToFirst()) {
                         int col_data = songs
-                                .getColumnIndex(MediaStore.Audio.Playlists.Members.DATA);
+                                .getColumnIndex(Playlists.Members.DATA);
                         do {
                             String path = songs.getString(col_data);
 
                             // Query to get duplicate entries
                             Cursor entries = getContentResolver().query(playlist_uri,
                                     projection,
-                                    MediaStore.Audio.Playlists.Members.DATA + "=\"" + path + "\"",
-                                    null, MediaStore.Audio.Playlists.Members.PLAY_ORDER + " ASC");
+                                    Playlists.Members.DATA + "=\"" + path + "\"",
+                                    null, Playlists.Members.PLAY_ORDER + " ASC");
 
                             if (entries != null && entries.getCount() > 1
                                     && entries.moveToFirst()) {
                                 int col_id = entries
-                                        .getColumnIndex(MediaStore.Audio.Playlists.Members._ID);
+                                        .getColumnIndex(Playlists.Members._ID);
                                 int col_title = entries
-                                        .getColumnIndex(MediaStore.Audio.Playlists.Members.TITLE);
+                                        .getColumnIndex(Playlists.Members.TITLE);
 
                                 // This will skip the 1st entry, as desired
                                 while (!isCancelled() && entries.moveToNext()) {
@@ -278,7 +278,7 @@ public class PlaylistActivity extends GDActivity {
                                     rows_deleted = getContentResolver()
                                             .delete(
                                                     playlist_uri,
-                                                    MediaStore.Audio.Playlists.Members._ID + "="
+                                                    Playlists.Members._ID + "="
                                                             + entry_id, null);
 
                                     Log.d(TAG, "Removed Entry - ID:" + entry_id + ", Title:"
@@ -327,33 +327,33 @@ public class PlaylistActivity extends GDActivity {
 
             // Get the songlist in the Playlist
             String[] projection = {
-                    MediaStore.Audio.Playlists.Members._ID,
-                    MediaStore.Audio.Playlists.Members.DATA,
-                    MediaStore.Audio.Playlists.Members.TITLE};
+                    Playlists.Members._ID,
+                    Playlists.Members.DATA,
+                    Playlists.Members.TITLE};
 
-            String selection = "1=1) GROUP BY " + MediaStore.Audio.Playlists.Members.DATA
-                    + " HAVING (count(" + MediaStore.Audio.Playlists.Members.DATA + ") > 1";
+            String selection = "1=1) GROUP BY " + Playlists.Members.DATA
+                    + " HAVING (count(" + Playlists.Members.DATA + ") > 1";
 
-            Uri playlist_uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id);
+            Uri playlist_uri = Playlists.Members.getContentUri("external", id);
 
             Cursor songs = getContentResolver().query(playlist_uri, projection, selection,
                     null, null);
 
             if (songs != null && songs.moveToFirst()) {
-                int col_data = songs.getColumnIndex(MediaStore.Audio.Playlists.Members.DATA);
+                int col_data = songs.getColumnIndex(Playlists.Members.DATA);
                 do {
                     String path = songs.getString(col_data);
 
                     // Query to get duplicate entries
                     Cursor entries = getContentResolver().query(playlist_uri, projection,
-                            MediaStore.Audio.Playlists.Members.DATA + "=\"" + path + "\"", null,
-                            MediaStore.Audio.Playlists.Members.PLAY_ORDER + " ASC");
+                            Playlists.Members.DATA + "=\"" + path + "\"", null,
+                            Playlists.Members.PLAY_ORDER + " ASC");
 
                     if (entries != null && entries.getCount() > 1 && entries.moveToFirst()) {
                         int col_id = entries
-                                .getColumnIndex(MediaStore.Audio.Playlists.Members._ID);
+                                .getColumnIndex(Playlists.Members._ID);
                         int col_title = entries
-                                .getColumnIndex(MediaStore.Audio.Playlists.Members.TITLE);
+                                .getColumnIndex(Playlists.Members.TITLE);
 
                         // This will skip the 1st entry, as desired
                         while (!isCancelled() && entries.moveToNext()) {
@@ -363,7 +363,7 @@ public class PlaylistActivity extends GDActivity {
                             // Remove the entry from the playlist
                             int rows_deleted = 0;
                             rows_deleted = getContentResolver().delete(playlist_uri,
-                                    MediaStore.Audio.Playlists.Members._ID + "=" + entry_id, null);
+                                    Playlists.Members._ID + "=" + entry_id, null);
 
                             Log.d(TAG, "Removed Entry - ID:" + entry_id + ", Title:" + title
                                     + ", Rows deleted:" + rows_deleted);
@@ -413,18 +413,18 @@ public class PlaylistActivity extends GDActivity {
 
             // Get the songlist in the Playlist
             String[] projection = {
-                    MediaStore.Audio.Playlists.Members.ALBUM,
-                    MediaStore.Audio.Playlists.Members.TITLE,
-                    MediaStore.Audio.Playlists.Members.DATA};
+                    Playlists.Members.ALBUM,
+                    Playlists.Members.TITLE,
+                    Playlists.Members.DATA};
 
             Cursor songs = getContentResolver().query(
-                    MediaStore.Audio.Playlists.Members.getContentUri("external", id), projection,
+                    Playlists.Members.getContentUri("external", id), projection,
                     null, null, null);
 
             mTotal = songs.getCount();
 
             if (songs != null && songs.moveToFirst()) {
-                int col_data = songs.getColumnIndex(MediaStore.Audio.Playlists.Members.DATA);
+                int col_data = songs.getColumnIndex(Playlists.Members.DATA);
                 do {
                     File file = new File(songs.getString(col_data));
                     if (file.exists()) {
